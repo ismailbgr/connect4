@@ -11,7 +11,7 @@ public class Board {
     public static final String ANSI_WHITE = "\u001B[37m";
 
     public static final int NUM_ROWS = 7;
-    public static final int NUM_COLS = 6;
+    public static final int NUM_COLS = 7;
 
     private String[][] board;
 
@@ -30,9 +30,9 @@ public class Board {
 
     public void printBoard() {
 
-        System.out.println(" 0123456");
+        System.out.println("  0123456");
         for (int i = 0; i < NUM_ROWS; i++) {
-            System.out.print(i + "█");
+            System.out.print(i + " ");
             for (int j = 0; j < NUM_COLS; j++) {
                 if (board[i][j].equals("r")) {
                     System.out.print(ANSI_RED + "█" + ANSI_RESET);

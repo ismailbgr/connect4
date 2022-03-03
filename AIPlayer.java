@@ -30,18 +30,20 @@ public class AIPlayer extends Player {
 
                 heuristic = Integer.MAX_VALUE;
                 
-                System.out.println("Calculated heuristic for " + this.getColor() + ": " + heuristic);
+                 Logger.log("Calculated heuristic for " + this.getColor() + ": " + heuristic);
                 return heuristic;
             } else {
                 heuristic = Integer.MIN_VALUE;
-                System.out.println("Calculated heuristic for " + this.getColor() + ": " + heuristic);
+                 Logger.log("Calculated heuristic for " + this.getColor() + ": " + heuristic);
                 return heuristic;
             }
         }
 
         for (int i = 0; i < board.getNumRows(); i++) {
+            // board.printBoard();
             for (int j = 0; j < board.getNumCols(); j++) {
                 if (board.getBoard()[i][j] == this.getColor()) {
+                    
                     heuristic += checkRow(board,i, j, this.getColor());
                     heuristic += checkCol(board,i, j, this.getColor());
                     heuristic += checkDiagonal(board,i, j, this.getColor());
@@ -49,8 +51,9 @@ public class AIPlayer extends Player {
             }
         }
 
-        System.out.println("Calculated heuristic for " + this.getColor() + ": " + heuristic);
+         Logger.log("Calculated heuristic for " + this.getColor() + ": " + heuristic);
 
+        // board.printBoard();
         return heuristic;
 
     }
@@ -71,7 +74,20 @@ public class AIPlayer extends Player {
                 break;
             }
         }
-        return count;
+
+         // Logger.log("Checked row for " + this.getColor() + ": " + count);
+
+        if (count >= 4) {
+            if(isMinimizing) {
+                return Integer.MIN_VALUE;
+            } else {
+                return Integer.MAX_VALUE;
+            }
+        } else {
+            return count;
+        }
+
+        
     }
 
     private int checkCol(Board board, int row, int col, String color) {
@@ -90,7 +106,17 @@ public class AIPlayer extends Player {
                 break;
             }
         }
-        return count;
+
+         // Logger.log("Checked col for " + this.getColor() + ": " + count);
+        if (count >= 4) {
+            if(isMinimizing) {
+                return Integer.MIN_VALUE;
+            } else {
+                return Integer.MAX_VALUE;
+            }
+        } else {
+            return count;
+        }
     }
 
     private int checkDiagonal(Board board, int row, int col, String color) {
@@ -109,7 +135,16 @@ public class AIPlayer extends Player {
                 break;
             }
         }
-        return count;
+        
+        if (count >= 4) {
+            if(isMinimizing) {
+                return Integer.MIN_VALUE;
+            } else {
+                return Integer.MAX_VALUE;
+            }
+        } else {
+            return count;
+        }
     }
 
 
@@ -139,14 +174,10 @@ public class AIPlayer extends Player {
             e.printStackTrace();
         }
 
-
-        //find best possible move using A*
-
-        //TODO implement A*
         
         //print heuristic value
         
-        System.out.println("Heuristic value: " + heuristic(board));
+         Logger.log("Heuristic value: " + heuristic(board));
 
         //get all possible moves
 
@@ -162,6 +193,14 @@ public class AIPlayer extends Player {
         //if minimizing, return the lowest heuristic value index
 
         //else return the move with the highest heuristic value index
+
+        /**
+         * 
+         * This is a Greedy Approach to the problem.
+         * instead of this we will use a desicion tree to solve the problem.
+         * TODO: Implement a decision tree to solve the problem.
+         * 
+         */
         
         //find min or max heuristic value
 
@@ -190,9 +229,9 @@ public class AIPlayer extends Player {
         }
 
         if(isMinimizing) {
-            System.out.println("AI with isMinimizing:"+ isMinimizing +" chose move " + minOrMaxIndex + " with heuristic value " + minOrMax);
+             Logger.log("AI with isMinimizing:"+ isMinimizing +" chose move " + minOrMaxIndex + " with heuristic value " + minOrMax);
         } else {
-            System.out.println("AI with isMinimizing:"+ isMinimizing +" chose move " + minOrMaxIndex + " with heuristic value " + minOrMax);
+             Logger.log("AI with isMinimizing:"+ isMinimizing +" chose move " + minOrMaxIndex + " with heuristic value " + minOrMax);
         }
 
         return minOrMaxIndex;
