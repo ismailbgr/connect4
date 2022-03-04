@@ -20,6 +20,7 @@ public class Board {
         for (int i = 0; i < NUM_ROWS; i++) {
             for (int j = 0; j < NUM_COLS; j++) {
                 board[i][j] = "█";
+                // board[i][j] = "⬤";
             }
         }
     }
@@ -30,16 +31,19 @@ public class Board {
 
     public void printBoard() {
 
-        System.out.println("  0123456");
+        System.out.println("   0 1 2 3 4 5 6");
         for (int i = 0; i < NUM_ROWS; i++) {
             System.out.print(i + " ");
             for (int j = 0; j < NUM_COLS; j++) {
                 if (board[i][j].equals("r")) {
-                    System.out.print(ANSI_RED + "█" + ANSI_RESET);
+                    // System.out.print(ANSI_RED + "█" + ANSI_RESET);
+                    System.out.print(ANSI_RED + "⬤ " + ANSI_RESET);
                 } else if (board[i][j].equals("b")) {
-                    System.out.print(ANSI_BLUE + "█" + ANSI_RESET);
+                    // System.out.print(ANSI_BLUE + "█" + ANSI_RESET);
+                    System.out.print(ANSI_BLUE + "⬤ " + ANSI_RESET);
                 } else {
-                    System.out.print(board[i][j]);
+                    // System.out.print(board[i][j]);
+                    System.out.print("⬤ ");
                 }
             }
             System.out.println();
