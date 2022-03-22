@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Board {
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -10,8 +12,8 @@ public class Board {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-    public static final int NUM_ROWS = 7;
-    public static final int NUM_COLS = 7;
+    public static int NUM_ROWS = 7;
+    public static int NUM_COLS = 7;
 
     private String[][] board;
 
@@ -27,6 +29,14 @@ public class Board {
 
     public Board(String[][] board) {
         this.board = board;
+        NUM_COLS = board[0].length;
+        NUM_ROWS = board.length;
+    }
+
+    public Board(Board board2) {
+        this.board = board2.getBoard();
+        NUM_COLS = board2.getNumCols();
+        NUM_ROWS = board2.getNumRows();
     }
 
     public void printBoard() {
@@ -51,6 +61,18 @@ public class Board {
 
     }
 
+    public void printRawBoard() {
+        System.out.println("{");
+        for (int i = 0; i < NUM_ROWS; i++) {
+            System.out.print("{");
+            for (int j = 0; j < NUM_COLS; j++) {
+                System.out.print("\"" + board[i][j] + "\",");
+            }
+            System.out.println("},");
+        }
+        System.out.println("}");
+    }
+
     public boolean isValidMove(int col) {
         if (col < 0 || col >= NUM_COLS) {
             return false;
@@ -70,6 +92,7 @@ public class Board {
         for (int i = NUM_ROWS - 1; i >= 0; i--) {
             if (board[i][col] == "█") {
                 board[i][col] = color;
+                lastmove = new Move(i, col);
                 return true;
             }
         }
@@ -218,4 +241,56 @@ public class Board {
         return false;
     }
 
+    
+
+    public int getBoardScore(AIPlayer p1, AIPlayer p2) {
+
+
+
+        int p1Score = p1.heuristic(this);
+        int p2Score = p2.heuristic(this);
+
+
+
+        return (int)(Math.pow(10, p2Score) - Math.pow(10, p1Score));
+        // return p1Score + p2Score;
+
+    }
+
+    public int getBoardScore() {
+
+        AIPlayer p1 = new AIPlayer("r");
+        AIPlayer p2 = new AIPlayer("b");
+
+        int p1Score = p1.heuristic(this);
+        int p2Score = p2.heuristic(this);
+
+
+
+        return (int)(Math.pow(2, p2Score) - Math.pow(2, p1Score));
+        // return p1Score + p2Score;
+
+    }
+
+    public boolean checkForGameOver() {
+        return isWinner("r") || isWinner("b");
+    }
+
+    Move lastmove = null;
+
+    public Move getLastMove() {
+        return lastmove;
+    }
+
+    public ArrayList<Board> getChildren(String player) {
+        ArrayList<Board> children = new ArrayList<Board>();
+        for (int col = 0; col < NUM_COLS; col++) {
+            if (isValidMove(col)) {
+                Board child = new Board(this);
+                child.makeMove(col, player);
+                children.add(child);
+            }
+        }
+        return children;
+    }
 }

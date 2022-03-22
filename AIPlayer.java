@@ -16,7 +16,7 @@ public class AIPlayer extends Player {
 
     
 
-    private int heuristic(Board board) {
+    public int heuristic(Board board) {
         /*
         
         The heuristic function is proportional to the power of number of chips that are continuous in a row/column/diagonal. This is added up for every row,column and diagonal.
@@ -44,9 +44,29 @@ public class AIPlayer extends Player {
             for (int j = 0; j < board.getNumCols(); j++) {
                 if (board.getBoard()[i][j] == this.getColor()) {
                     
-                    heuristic += checkRow(board,i, j, this.getColor());
-                    heuristic += checkCol(board,i, j, this.getColor());
-                    heuristic += checkDiagonal(board,i, j, this.getColor());
+                    // heuristic += checkRow(board,i, j, this.getColor());
+                    // heuristic += checkCol(board,i, j, this.getColor());
+                    // heuristic += checkDiagonal(board,i, j, this.getColor());
+
+                    if(isMinimizing){
+
+                        
+
+                        heuristic = heuristic*(-1);
+
+                        if(heuristic == Integer.MIN_VALUE) {
+                            heuristic = Integer.MAX_VALUE;
+                        }
+
+                        heuristic = Math.max(Math.max(checkRow(board,i, j, this.getColor()), Math.max(checkCol(board,i, j, this.getColor()), checkDiagonal(board,i, j, this.getColor()))), heuristic);
+                        heuristic = heuristic*(-1);
+                        if(heuristic == Integer.MIN_VALUE + 1) {
+                            heuristic = Integer.MIN_VALUE;
+                        }
+                    }else{
+                        heuristic = Math.max(Math.max(checkRow(board,i, j, this.getColor()), Math.max(checkCol(board,i, j, this.getColor()), checkDiagonal(board,i, j, this.getColor()))), heuristic);
+                    }
+
                 }
             }
         }
@@ -67,22 +87,23 @@ public class AIPlayer extends Player {
                 break;
             }
         }
-        for (int i = row - 1; i >= 0; i--) {
-            if (board.getBoard()[i][col] == color) {
-                count++;
-            } else {
-                break;
-            }
-        }
+        // for (int i = row - 1; i >= 0; i--) {
+        //     if (board.getBoard()[i][col] == color) {
+        //         count++;
+        //     } else {
+        //         break;
+        //     }
+        // }
 
          // Logger.log("Checked row for " + this.getColor() + ": " + count);
 
         if (count >= 4) {
-            if(isMinimizing) {
-                return Integer.MIN_VALUE;
-            } else {
-                return Integer.MAX_VALUE;
-            }
+            return Integer.MAX_VALUE;
+            // if(isMinimizing) {
+            //     return Integer.MIN_VALUE;
+            // } else {
+            //     return Integer.MAX_VALUE;
+            // }
         } else {
             return count;
         }
@@ -109,39 +130,73 @@ public class AIPlayer extends Player {
 
          // Logger.log("Checked col for " + this.getColor() + ": " + count);
         if (count >= 4) {
-            if(isMinimizing) {
-                return Integer.MIN_VALUE;
-            } else {
-                return Integer.MAX_VALUE;
-            }
+            return Integer.MAX_VALUE;
+            // if(isMinimizing) {
+            //     return Integer.MIN_VALUE;
+            // } else {
+            //     return Integer.MAX_VALUE;
+            // }
         } else {
             return count;
         }
     }
 
     private int checkDiagonal(Board board, int row, int col, String color) {
-        int count = 0;
+        /*
+        *
+         *
+          * 
+           *
+        */
+        int leftDiagCount = 0;
         for (int i = row, j = col; i < board.getNumRows() && j < board.getNumCols(); i++, j++) {
             if (board.getBoard()[i][j] == color) {
-                count++;
+                leftDiagCount++;
             } else {
                 break;
             }
         }
         for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
             if (board.getBoard()[i][j] == color) {
-                count++;
+                leftDiagCount++;
+            } else {
+                break;
+            }
+        }
+
+        /*
+           *
+          *
+         * 
+        *
+        */
+
+        int rightDiagCount = 0;
+        for (int i = row, j = col; i < board.getNumRows() && j >= 0; i++, j--) {
+            if (board.getBoard()[i][j] == color) {
+                rightDiagCount++;
+            } else {
+                break;
+            }
+        }
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= board.getNumCols(); i--, j++) {
+            if (board.getBoard()[i][j] == color) {
+                rightDiagCount++;
             } else {
                 break;
             }
         }
         
+        int count = Math.max(leftDiagCount, rightDiagCount);
+
+
         if (count >= 4) {
-            if(isMinimizing) {
-                return Integer.MIN_VALUE;
-            } else {
-                return Integer.MAX_VALUE;
-            }
+            return Integer.MAX_VALUE;
+            // if(isMinimizing) {
+            //     return Integer.MIN_VALUE;
+            // } else {
+            //     return Integer.MAX_VALUE;
+            // }
         } else {
             return count;
         }
@@ -167,9 +222,9 @@ public class AIPlayer extends Player {
     @Override
     public int AskForMove(Board board) {
 
-        //wait 1 second
+        // wait 1 second
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -188,7 +243,17 @@ public class AIPlayer extends Player {
         int[] heuristicValues = new int[possibleMoves.length];
 
         for (int i = 0; i < possibleMoves.length; i++) {
-            heuristicValues[i] = heuristic(possibleMoves[i]);
+            AIPlayer dummy = new AIPlayer(this.getOpponentColor());
+            if(possibleMoves[i] != null) {
+                heuristicValues[i] = possibleMoves[i].getBoardScore(this, dummy);
+            }else{
+                if(isMinimizing) {
+                    heuristicValues[i] = Integer.MAX_VALUE;
+                } else {
+                    heuristicValues[i] = Integer.MIN_VALUE;
+                }
+            }
+            
         }
         //if minimizing, return the lowest heuristic value index
 

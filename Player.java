@@ -12,6 +12,15 @@ public class Player {
     public String getColor() {
         return color;
     }
+    
+    public String getOpponentColor(){
+        if(this.color.equals("r")){
+            return "b";
+        }
+        else{
+            return "r";
+        }
+    }
 
     public int AskForMove(Board board) {
         Scanner scanner = new Scanner(System.in);
