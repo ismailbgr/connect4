@@ -12,12 +12,12 @@ public class AIPlayerMini extends AIPlayer{
     public AIPlayerMini(String color) {
         super(color);
     }
-    
+    int maxDepth = 6;
 
     private Move max(Board board, int depth) {
         Random r = new Random();
 
-        int maxDepth = 5;
+        
         /* If MAX is called on a state that is terminal or after a maximum depth is reached,
          * then a heuristic is calculated on the state and the move returned.
          */
@@ -51,8 +51,6 @@ public class AIPlayerMini extends AIPlayer{
     
     private Move min(Board board, int depth) {
         Random r = new Random();
-
-        int maxDepth = 5;
         if ((board.checkForGameOver()) || (depth == maxDepth)) {
             return new Move(board.getLastMove().getRow(), board.getLastMove().getColumn(), board.getBoardScore());
         }
@@ -79,7 +77,7 @@ public class AIPlayerMini extends AIPlayer{
 
     @Override
     public int AskForMove(Board board) {
-        if(isMinimizing)
+        if(!isMinimizing)
             return max(board, 0).getColumn();
         else
             return min(board, 0).getColumn();

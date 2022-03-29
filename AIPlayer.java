@@ -243,9 +243,8 @@ public class AIPlayer extends Player {
         int[] heuristicValues = new int[possibleMoves.length];
 
         for (int i = 0; i < possibleMoves.length; i++) {
-            AIPlayer dummy = new AIPlayer(this.getOpponentColor());
             if(possibleMoves[i] != null) {
-                heuristicValues[i] = possibleMoves[i].getBoardScore(this, dummy);
+                heuristicValues[i] = possibleMoves[i].getBoardScore();
             }else{
                 if(isMinimizing) {
                     heuristicValues[i] = Integer.MAX_VALUE;
@@ -263,7 +262,6 @@ public class AIPlayer extends Player {
          * 
          * This is a Greedy Approach to the problem.
          * instead of this we will use a desicion tree to solve the problem.
-         * TODO: Implement a decision tree to solve the problem.
          * 
          */
         

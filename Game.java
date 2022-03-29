@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.Random;
 
 public class Game {
@@ -70,6 +69,7 @@ public class Game {
             }
 
             board.printBoard();
+            System.out.println(board.getBoardScore()+"------------------------------------");
             col = player1.AskForMove(board);
             board.makeMove(col, player1.getColor());
             currentRound++;
@@ -79,6 +79,7 @@ public class Game {
                 board.printBoard();
                 board.printRawBoard();
                 System.out.println("----------------");
+                System.out.println("----------------"+board.getBoardScore()+"------------------------------------");
                 break;
             }
             if (board.isFull()) {
@@ -87,6 +88,7 @@ public class Game {
                 board.printBoard();
                 board.printRawBoard();
                 System.out.println("----------------");
+                System.out.println("----------------"+board.getBoardScore()+"------------------------------------");
                 break;
             }
             board.printBoard();
@@ -99,6 +101,7 @@ public class Game {
                 board.printBoard();
                 board.printRawBoard();
                 System.out.println("----------------");
+                System.out.println("----------------"+board.getBoardScore()+"------------------------------------");
                 break;
             }
             if (board.isFull()) {
@@ -107,8 +110,10 @@ public class Game {
                 board.printBoard();
                 board.printRawBoard();
                 System.out.println("----------------");
+                System.out.println("----------------"+board.getBoardScore()+"------------------------------------");
                 break;
             }
+            
             
 
 
